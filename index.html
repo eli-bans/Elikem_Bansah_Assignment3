@@ -1,0 +1,217 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Input Form</title>
+    <style>
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        label {
+            grid-column: 1 / span 1;
+        }
+        select, input[type="float"] {
+            grid-column: 2 / span 1;
+        }
+    </style>
+</head>
+<body>
+    <h2>Churn Prediction Form</h2>
+    <form action="/predict" method="post">
+        <!-- Gender -->
+        <label for="gender">Gender:</label>
+        <select name="gender" id="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <br>
+
+        <!-- Senior Citizen -->
+        <label for="senior_citizen">Senior Citizen:</label>
+        <select name="senior_citizen" id="senior_citizen">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+        <!-- Partner -->
+        <label for="Partner">Partner:</label>
+        <select name="Partner" id="Partner">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+        <!-- Dependents -->
+        <label for="Dependents">Dependents:</label>
+        <select name="Dependents" id="Dependents">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+        <!-- PhoneService -->
+        <label for="PhoneService">Phone Service:</label>
+        <select name="PhoneService" id="PhoneService">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+        <!-- MultipleLines -->
+        <label for="MultipleLines">Multiple Lines:</label>
+        <select name="MultipleLines" id="MultipleLines">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+        <!-- Internet Service -->
+        <label for="InternetService">Internet Services:</label>
+        <select name="InternetService" id="InternetService">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+         <!-- Online Security -->
+        <label for="OnlineSecurity">Online Security:</label>
+        <select name="OnlineSecurity" id="OnlineSecurity">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+         <!-- Online Backup -->
+        <label for="OnlineBackup">Online Backup:</label>
+        <select name="OnlineBackup" id="OnlineBackup">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+         <!-- Device Protection -->
+        <label for="DeviceProtection">DeviceProtection:</label>
+        <select name="DeviceProtection" id="DeviceProtection">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+         <!-- TechSupport -->
+        <label for="TechSupport">Tech Support:</label>
+        <select name="TechSupport" id="TechSupport">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+          <!-- StreamingTV -->
+        <label for="StreamingTV">Streaming TV:</label>
+        <select name="StreamingTV" id="StreamingTV">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+          <!-- StreamingMovies -->
+        <label for="StreamingMovies">Streaming Movies:</label>
+        <select name="StreamingMovies" id="StreamingMovies">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+          <!-- Contract-->
+        <label for="Contract">Contract:</label>
+        <select name="Contract" id="Contract">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+          <!-- PaperlessBilling-->
+        <label for="PaperlessBilling">Paperless Billing:</label>
+        <select name="PaperlessBilling" id="PaperlessBilling">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+           <!-- PaymentMethod-->
+        <label for="PaymentMethod">Payment Method:</label>
+        <select name="PaymentMethod" id="PaymentMethod">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+        <br>
+
+
+        <!-- Tenure -->
+        <label for="tenure">Tenure:</label>
+        <input type="float" name="tenure" id="tenure" min="0" max="100">
+        <br>
+
+        <!-- Monthly Charges -->
+        <label for="monthly_charges">Monthly Charges:</label>
+        <input type="float" name="monthly_charges" id="monthly_charges" min="0" max="500">
+        <br>
+
+        <!-- Total Charges -->
+        <label for="total_charges">Total Charges:</label>
+        <input type="float" name="total_charges" id="total_charges" min="0" max="1000">
+        <br>
+
+        <input type="submit" value="Predict">
+    </form>
+
+    <div class="prediction_result">
+    <h1>
+        Prediction Result:
+        <span id="result_value">{{ prediction_result }}%</span>
+    </h1>
+</div>
+
+<div class="prediction_result" id="prediction_result_section">
+    {% if prediction_result is defined %}
+        <h1>
+            Prediction Result:
+
+            {% if prediction_result > 0.5 %}
+                Likely to Churn
+            {% else %}
+                Unlikely to Churn
+            {% endif %}
+        </h1>
+        <p>Confidence Score: {{ prediction_result }}</p>
+    {% endif %}
+</div>
+
+
+
+    <!-- JavaScript code to check for prediction results in the URL -->
+    <script>
+    // JavaScript code to check for prediction results in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Get the prediction_result parameter
+    const predictionResult = urlParams.get('prediction_result');
+
+    // Check if the parameter is present and not null
+    if (predictionResult !== null) {
+        // Convert to floating-point numbers and format to two decimal places
+        const formattedResult = parseFloat(predictionResult).toFixed(2);
+
+        // Display the formatted results in the second div
+        document.getElementById('result_value').innerText = formattedResult;
+
+        // Show the prediction result container
+        document.getElementById('prediction_result_section').style.display = 'block';
+    }
+
+    </script>
+
+</body>
+</html>
